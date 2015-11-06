@@ -1,0 +1,24 @@
+name = Skirmisher
+description = Skirmisher site default theme.
+package = Core
+version = VERSION
+core = 7.x
+stylesheets[all][] = skirmisherstyles.css
+stylesheets[all][] = jquery.mCustomScrollbar.css
+
+
+scripts[] = jquery.mousewheel.min.js
+scripts[] = jquery.mCustomScrollbar.js
+scripts[] = jquery-ui.min.js
+scripts[] = source_menu.js
+
+regions[page_top] = Page top
+regions[header] = Header
+regions[highlight] = Highlight
+regions[help] = Help
+regions[content] = Content
+regions[sidebar_first] = First sidebar
+regions[sidebar_second] = Second sidebar
+regions[footer] = Footer
+regions[store_menu_region] = Store Menu Region
+

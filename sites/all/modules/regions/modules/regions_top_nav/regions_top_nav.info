@@ -1,0 +1,12 @@
+name = "Regions - Top navigation"
+project = "regions_top_nav"
+package = "Regions"
+description = "Provides a top navigational branding region."
+core = "7.x"
+dependencies[] = "regions"
+; Information added by drupal.org packaging script on 2013-01-23
+version = "7.x-1.5"
+core = "7.x"
+project = "regions"
+datestamp = "1358968426"
+

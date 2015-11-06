@@ -1,0 +1,109 @@
+<?php
+	
+	/**
+	 * Implements hook_block_info().
+	 */
+	function library_navigation_block_info() {
+	$blocks['library_navigation'] = array(
+	      'info' => t('Library Navigation'),
+	    );
+	  return $blocks;
+	}
+
+	function library_navigation_block_view($delta = ''){
+		drupal_add_js(drupal_get_path('module', 'library_navigation') .'/jquery.cookie.js');
+		drupal_add_js(drupal_get_path('module', 'library_navigation') .'/jquery-ui.min.js');
+		drupal_add_js(drupal_get_path('module', 'library_navigation') .'/navigation.js');
+
+
+		$block = array();
+
+		/**
+		* Get all taxonomy names
+		*/
+		/////////////////////////////////////////////////////////////////////////////
+		$result = db_query('select tid, name from taxonomy_term_data where vid = 2');
+		$term_names = array();
+		foreach($result as $record)
+		{
+			$term_names[$record->tid]=$record->name;
+		}
+		/////////////////////////////////////////////////////////////////////////////
+
+		/**
+		* Get taxonomy Heirarchy for taxonomy terms the user has access to.
+		*/
+		/////////////////////////////////////////////////////////////////////////////
+		$query = "SELECT distinct ttd.tid, tth.parent
+		FROM taxonomy_term_data ttd, taxonomy_term_hierarchy tth, taxonomy_index ti, node n
+		WHERE ttd.vid = 2
+		AND ttd.tid = tth.tid
+		AND ttd.tid = ti.tid
+		AND ti.nid = n.nid
+		AND n.type = 'source_material'
+		AND n.nid in (SELECT an.nid
+		FROM acl_node an, acl_user al
+		WHERE an.acl_id = al.acl_id
+		AND an.grant_view = 1
+		AND uid = :uid
+		UNION
+		SELECT nid 
+		FROM node_access, users_roles
+		WHERE uid = :uid
+		AND gid = rid
+		AND grant_view = 1)
+		;";
+		$account = $GLOBALS['user'];
+		
+		$result = db_query($query, array(':uid' => $account->uid));
+
+		$heirarchy = array();
+
+		foreach ($result as $record){
+			if(array_key_exists("".$record->parent, $heirarchy))
+			{
+				$heirarchy["".$record->parent]["".$record->tid] = array();
+			}
+			else
+			{
+				$heirarchy["".$record->parent] = array("".$record->tid => array());
+			}
+		}
+		/////////////////////////////////////////////////////////////////////////////
+		$html = "";
+		$html.='<script>user='.$account->uid.';</script>';
+		/**
+		* Create the HTML structure
+		*/
+		/////////////////////////////////////////////////////////////////////////////
+		
+		//Search Box
+
+		$html.='<span class="field-label">Search:</span>';
+		$html.='<input id="source_search" type="text" onclick="this.select()" />';
+		$html.='<div id="source_results"></div>';
+		//////////////////////////////
+		$html.='<div id="menu_results">';
+		foreach(array_keys($heirarchy) as $pname)
+		{
+			if((int)$pname > 0)
+			{
+			$html.="<ul>";
+			//$html.="<script>console.log('".$pname.":".$term_names[(int)$pname]."');</script>";
+			$html.="<li id='".$pname."' class='taxonomy_item parent'><h4>".$term_names[(int)$pname]."</h4><ul>";
+			foreach(array_keys($heirarchy[$pname]) as $cname)
+			{
+				$html.="<li id='".$cname."' class='taxonomy_item child'><h4>".$term_names[(int)$cname];
+				$html.="</h4><ul></ul></li>";
+			}
+
+			$html.="</ul></li></ul>";
+			}
+		}
+		$html.="</div>";
+		/////////////////////////////////////////////////////////////////////////////
+
+		$block['content'] = $html;
+		return $block;
+	}
+?>

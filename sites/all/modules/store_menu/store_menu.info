@@ -1,0 +1,4 @@
+name = Store Menu
+description = Navigation for Bookforge Store
+core = 7.x
+files[] = store_menu.module

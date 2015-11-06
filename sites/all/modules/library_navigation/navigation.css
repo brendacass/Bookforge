@@ -1,0 +1,22 @@
+
+
+#block-library-navigation-library-navigation .parent h4{
+border-bottom-style: solid;
+border-bottom-width: 1px;
+border-left-style: solid;
+border-left-width: 3px;
+border-color: #858585;
+padding: 2px;
+
+display:list-item;
+list-style-image: url("images/menu-collapsed.png");
+}
+
+.clicked{
+list-style-image: url("images/menu-expanded.png") !important;	
+}
+
+.view-source-tree .taxonomy_label:hover{
+	background-image: url("images/diagonal_bg.png");
+	cursor: pointer;
+}

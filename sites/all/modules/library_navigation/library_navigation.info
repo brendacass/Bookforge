@@ -1,0 +1,4 @@
+name = Library Navigation
+description = Navigation for Bookforge Library
+core = 7.x
+files[] = library_navigation.module

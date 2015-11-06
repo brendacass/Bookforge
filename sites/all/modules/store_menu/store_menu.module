@@ -1,0 +1,31 @@
+<?php
+	
+	/**
+	 * Implements hook_block_info().
+	 */
+	function store_menu_block_info() {
+	$blocks['store_menu'] = array(
+	      'info' => t('Store Menu'),
+	    );
+	  return $blocks;
+	}
+
+
+	function store_menu_block_view($delta = ''){
+		
+
+
+
+		$block = array();
+		$html = '<div id="store_button">';
+		$html .= '<a href="/store">Store</a>';
+		$html .= '<div id="store_menu">';
+		
+		$html .= '</div>';
+		$html .= '</div>';
+
+
+		$block['content'] = $html;
+		return $block;
+	}
+?>
